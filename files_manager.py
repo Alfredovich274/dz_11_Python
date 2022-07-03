@@ -24,7 +24,7 @@ while menu:
     if menu == 1:
         # После выбора пользователь вводит название папки,
         # создаем её в рабочей директории;
-        name = input('Введите название: ')
+        name = input('Введите имя папки: ')
         if name in os.listdir():
             print('Папка существует')
         else:
@@ -33,8 +33,9 @@ while menu:
         # После выбора пользователь вводит название папки или файла, удаляем
         # из рабочей директории если такой есть;
         name = input('Введите название папки/файла: ')
+        # проверяем наличие папки/файла
         if name in os.listdir():
-            if '.' in name:
+            if os.path.isfile(name):
                 os.remove(name)
             else:
                 shutil.rmtree(name, ignore_errors=True)
@@ -46,32 +47,34 @@ while menu:
         name = input('Введите название папки/файла и '
                      'новое название через пробел: ')
         name = name.split()
-        if '.' in name[0] and '.' in name[1]:
+        # проверяем наличие папки/файла !!!!!
+        pass
+        if os.path.isfile(name[0]):
             shutil.copy(name[0], name[1])
         else:
             shutil.copytree(name[0], name[1])
     elif menu == 4:
         # вывод всех объектов в рабочей папке;
-        print(os.listdir())
+        print(*os.listdir(), sep='  ')
     elif menu == 5:
         # вывод только папок которые находятся в рабочей папке;
         for name in os.listdir():
-            if '.' in name and name[0] != '.':
+            if os.path.isdir(name):
                 print(name, end='  ')
         print()
     elif menu == 6:
         # вывод только файлов которые находятся в рабочей папке;
         for name in os.listdir():
-            if '.' not in name or name[0] == '.':
+            if os.path.isfile(name):
                 print(name, end='  ')
         print()
     elif menu == 7:
         # вывести информацию об операционной системе
         # (можно использовать пример из 1 -го урока);
-        print(sys.platform)
+        print('Операционная система - ', sys.platform)
     elif menu == 8:
         # вывод информации о создателе программы;
-        print('Павел')
+        print('*** Создатель программы - Павел ***')
     elif menu == 9:
         # запуск игры викторина из предыдущего дз;
         victory()
@@ -84,8 +87,28 @@ while menu:
         # Усложненное задание пользователь вводит полный /home/user/...
         # или относительный user/my/... путь. Меняем рабочую директорию на ту
         # что ввели и работаем уже в ней;
+        old_path = os.getcwd()
+        print('Текущий каталог ', old_path)
+        new_path = input('Введите полный или относительный путь: ')
+        if os.path.exists(new_path):
+            os.chdir(new_path)
+        else:
+            old_path = old_path.split('/')
+            new_path = new_path.split('/')
+            if new_path[0] in old_path:
+                for name in old_path:
+                    if name == new_path[0]:
+                        key = old_path.index(name)
+                        path = os.path.join('/', *old_path[1:key], *new_path)
+                        if os.path.exists(path):
+                            os.chdir(path)
+            elif new_path[0] in os.listdir():
+                path = os.path.join('/', *old_path[1:], *new_path)
+                if os.path.exists(path):
+                    os.chdir(path)
+            else:
+                print('Путь не существует')
         print('Текущий каталог ', os.getcwd())
-        os.chdir(input('Введите полный или относительный путь: '))
     else:
         print('В меню нет такого пункта')
     menu = int(input('Выберите пункт меню: '))
