@@ -26,6 +26,17 @@ def my_remove(x):
     return shutil.rmtree(x, ignore_errors=True)
 
 
+def file_or_dir(print_file=False, print_dir=False):
+    name_dir = []
+    name_file = []
+    for name_list in my_listdir():
+        if my_isdir(name_list) and print_dir:
+            name_dir.append(name_list)
+        if my_isfile(name_list) and print_file:
+            name_file.append(name_list)
+    return ', '.join(name_dir), ', '.join(name_file)
+
+
 if __name__ == '__main__':
     print('1 - создать папку;\n'
           '2 - удалить (файл/папку);\n'
@@ -38,6 +49,7 @@ if __name__ == '__main__':
           '9 - играть в викторину;\n'
           '10 - мой банковский счет;\n'
           '11 - смена рабочей директории;\n'
+          '12 - сохранить содержимое рабочей директории в файл;\n'
           '0 - выход.')
 
     menu = int(input('Выберите пункт меню: '))
@@ -80,16 +92,13 @@ if __name__ == '__main__':
             print(*my_listdir(), sep='  ')
         elif menu == 5:
             # вывод только папок которые находятся в рабочей папке;
-            for name in my_listdir():
-                if my_isdir(name):
-                    print(name, end='  ')
-            print()
+            names, _ = file_or_dir(print_dir=True)
+            print(f'dirs: {names}')
+            print(type(names))
         elif menu == 6:
             # вывод только файлов которые находятся в рабочей папке;
-            for name in my_listdir():
-                if my_isfile(name):
-                    print(name, end='  ')
-            print()
+            _, names = file_or_dir(print_file=True)
+            print(f'files: {names}')
         elif menu == 7:
             # вывести информацию об операционной системе
             # (можно использовать пример из 1 -го урока);
@@ -132,6 +141,11 @@ if __name__ == '__main__':
                 else:
                     print('Путь не существует')
             print('Текущий каталог ', os.getcwd())
+        elif menu == 12:
+            dirs, files = file_or_dir(print_file=True, print_dir=True)
+            with open('listdir.txt', 'w') as file:
+                file.write(f'files: {files}\n')
+                file.write(f'dirs: {dirs}')
         else:
             print('В меню нет такого пункта')
         menu = int(input('Выберите пункт меню: '))
