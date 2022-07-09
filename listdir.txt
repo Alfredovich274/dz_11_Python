@@ -1,0 +1,2 @@
+files: functions.py, .DS_Store, test_python.py, test_filemanager.py, my_wallet.txt, use_functions.py, files_manager.py, victorina.py, my_history.txt
+dirs: .pytest_cache, __pycache__, venv, .git, .idea
