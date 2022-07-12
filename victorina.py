@@ -22,7 +22,7 @@ def victory():
             '14': 'четырнадцатое',
             '19': 'девятнадцатое',
             '24': 'двадцать четвертое'
-    }
+            }
     months = {
         '01': 'января',
         '02': 'февраля',
@@ -33,13 +33,14 @@ def victory():
         '09': 'сентября',
         '10': 'октября',
         '11': 'ноября'
-    }
+            }
     print('Приветствую тебя на викторине!',
           '\nВам предстоит отгадать даты рождения нескольких известных людей\n')
     game = True
     while game:
-        key_people = list(people.keys())
-        names = list(people.keys())
+        # key_people = list(people.keys())
+        # names = list(people.keys())
+        names = [name for name in people.keys()]
         names_questions = random.sample(names, 5)
 
         print('Введите дату рождения человека в формате dd.mm.yyyy')
@@ -61,3 +62,7 @@ def victory():
                  'введите любой символ- ') == '':
             game = False
             print()
+
+
+if __name__ == '__main__':
+    victory()
