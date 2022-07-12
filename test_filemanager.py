@@ -8,7 +8,7 @@ def test_my_listdir():
 
 
 def test_my_isfile():
-    assert True == my_isfile('files_manager.py')
+    assert my_isfile('files_manager.py') == True
     assert my_isfile('venv') == False
 
 

@@ -37,7 +37,27 @@ def file_or_dir(print_file=False, print_dir=False):
     return ', '.join(name_dir), ', '.join(name_file)
 
 
-if __name__ == '__main__':
+def decorator_menu(func):
+    def inner_func(*args, **kwargs):
+        print('Выберите пункт меню:', end=' ')
+        return func()
+    return inner_func
+
+
+@ decorator_menu
+def input_data(my_int=True):
+    in_data = ''
+    if my_int:
+        try:
+            in_data = int(input())
+        except ValueError:
+            print('Это не число, введите число!')
+    else:
+        in_data = input()
+    return in_data
+
+
+def print_menu():
     print('1 - создать папку;\n'
           '2 - удалить (файл/папку);\n'
           '3 - копировать (файл/папку);\n'
@@ -52,12 +72,15 @@ if __name__ == '__main__':
           '12 - сохранить содержимое рабочей директории в файл;\n'
           '0 - выход.')
 
-    menu = int(input('Выберите пункт меню: '))
+
+if __name__ == '__main__':
+    menu = 99
+    print_menu()
 
     while menu:
         if menu == 1:
             # После выбора пользователь вводит название папки,
-            # создаем её в рабочей директории;
+            # создаем её в рабочей директории
             name = input('Введите имя папки: ')
             if name in my_listdir():
                 print('Папка существует')
@@ -69,10 +92,11 @@ if __name__ == '__main__':
             name = input('Введите название папки/файла: ')
             # проверяем наличие папки/файла
             if name in my_listdir():
-                if my_isfile(name):
-                    os.remove(name)
-                else:
-                    my_remove(name)
+                os.remove(name) if my_isfile(name) else my_remove(name)
+                # if my_isfile(name):
+                #     os.remove(name)
+                # else:
+                #     my_remove(name)
             else:
                 print('Папка/файл не существует')
         elif menu == 3:
@@ -82,11 +106,13 @@ if __name__ == '__main__':
                          'новое название через пробел: ')
             name = name.split()
             # проверяем наличие папки/файла !!!!!
-            pass
-            if my_isfile(name[0]):
-                shutil.copy(name[0], name[1])
-            else:
-                shutil.copytree(name[0], name[1])
+            shutil.copy(name[0], name[1]) \
+                if my_isfile(name[0]) \
+                else shutil.copytree(name[0], name[1])
+            # if my_isfile(name[0]):
+            #     shutil.copy(name[0], name[1])
+            # else:
+            #     shutil.copytree(name[0], name[1])
         elif menu == 4:
             # вывод всех объектов в рабочей папке;
             print(*my_listdir(), sep='  ')
@@ -146,8 +172,10 @@ if __name__ == '__main__':
             with open('listdir.txt', 'w') as file:
                 file.write(f'files: {files}\n')
                 file.write(f'dirs: {dirs}')
+        elif menu == 99:
+            pass
         else:
             print('В меню нет такого пункта')
-        menu = int(input('Выберите пункт меню: '))
+        menu = input_data()
 
     print('Выход')
